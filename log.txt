@@ -1,3 +1,14 @@
 URL: /
 Timestamp: Sat Nov 23 2024 11:46:38 GMT-0700 (Mountain Standard Time)
 
+::1 - - [03/Dec/2024:02:58:08 +0000] "GET / HTTP/1.1" 200 35
+::1 - - [03/Dec/2024:02:58:08 +0000] "GET /favicon.ico HTTP/1.1" 404 150
+::1 - - [03/Dec/2024:02:58:49 +0000] "GET /documentation HTTP/1.1" 404 152
+::1 - - [03/Dec/2024:02:59:36 +0000] "GET / HTTP/1.1" 304 -
+::1 - - [03/Dec/2024:02:59:38 +0000] "GET /movies HTTP/1.1" 200 480
+::1 - - [03/Dec/2024:03:00:18 +0000] "GET /movies HTTP/1.1" 304 -
+::1 - - [03/Dec/2024:03:00:18 +0000] "GET / HTTP/1.1" 304 -
+::1 - - [03/Dec/2024:03:00:25 +0000] "GET /documentation.html HTTP/1.1" 200 -
+::1 - - [03/Dec/2024:03:05:06 +0000] "GET /documentation.html HTTP/1.1" 304 -
+::1 - - [03/Dec/2024:03:05:12 +0000] "GET /documentation.html HTTP/1.1" 304 -
+::1 - - [03/Dec/2024:03:05:13 +0000] "GET /documentation HTTP/1.1" 404 152
