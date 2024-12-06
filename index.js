@@ -19,7 +19,8 @@ app.use(bodyParser.json());
 let users = [
     {
         id: 1,
-        name: "John",
+        name: "John Doe",
+        email: "hi@none.com",
         favoriteMovies: []
     }
 ];
@@ -173,23 +174,24 @@ app.use(express.static('public'));
 app.post('/users', (req, res) => {
     const newUser = req.body;
 
-    if(newUser.name) {
+    if(newUser.name && newUser.email) {
         newUser.id = uuid.v4();
+        newUser.favoriteMovies = [];
         users.push(newUser);
         res.status(201).json(newUser);
     } else {
-        res.status(404).send('Name is missing from user. Please add a name.');
+        res.status(404).send('Name or email is missing from user. Please add a name or email.');
     }
 });
 
 //Delete a user from the database
-app.delete('/users/:id', (req, res) =>{
-    const id = req.params.id;
-    let user = users.find(user => user.id == id);
+app.delete('/users/:email', (req, res) =>{
+    const id = req.params.email;
+    let user = users.find(user => user.email == id);
 
     if(user){
-        users = users.filter(user => user.id != id);
-        res.status(201).send(`${user.name} has been removed from our database!`);
+        users = users.filter(user => user.email != id);
+        res.status(201).send(`${user.email} has been removed from our database!`);
     } else {
         res.status(400).send('The user is not in our database.');
     }
@@ -224,13 +226,14 @@ app.delete('/users/:id/:movie', (req, res) =>{
 });
 
 //Update users usernames
-app.put('/users/:update', (req, res) => {
+app.put('/users/:id/:update', (req, res) => {
     let updatedUser = req.body;
-    let id = req.params.update;
+    let id = req.params.id;
+    let update = req.params.update;
     let user = users.find(user => user.id == id);
 
     if(user){
-        user.name = updatedUser.name;
+        user.name = update;
         res.status(201).json(user);
     } else {
         res.status(400).send('This user is not in our database');

@@ -21,6 +21,95 @@
                         <th>Response Body Data Format</th>
                     </tr>
                 </thead>
+                <tbody>
+                    <tr>
+                        <td>Create new users</td>
+                        <td>/users</td>
+                        <td>POST</td>
+                        <td>Json object with new user data. Example:
+                            <pre>{"name" : "John Doe", "email" : "Johndoe@none.com"}</pre>
+                        </td>
+                        <td>If the name and email fields are present, then a new user will be created and given two new fields. One is Id and the other is favoriteMovies. Example:
+                            <pre>{"name" : "John Doe", "email" : "Johndoe@none.com", "id" : "1234", "favoriteMovies" : "[]"}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Delete a user from the database</td>
+                        <td>/users/:email</td>
+                        <td>DELETE</td>
+                        <td>none</td>
+                        <td>If the user exist, then their account will be deleted. If the user does not exist, then a 404 error message is shown. Example:
+                            <pre>{message : User has been removed from our database!}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Add a new movie to their favorite movies</td>
+                        <td>/users/:id/:movie</td>
+                        <td>POST</td>
+                        <td>JSON object with updated movie data. Example:
+                            <pre>{"favoriteMovies" : "A Movie"}</pre>
+                        </td>
+                        <td>If the user exists, then the movie will be added to their Favorite Movies list. If the user does not exist, then a 404 error message is shown. Example:
+                            <pre>{message : Movie has been added to User's favorite movie list!}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Remove a movie from their favorite movies</td>
+                        <td>/users/:id/:movie</td>
+                        <td>DELETE</td>
+                        <td>none</td>
+                        <td>If the user exist, then the movie will be removed from their Favorite Movies list. If the user does not exist, then a 404 error message is shown. Example:
+                            <pre>{message : movie has been removed from user's favorite movie list!}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Update users usernames</td>
+                        <td>/users/:update</td>
+                        <td>PUT</td>
+                        <td>JSON object with updated user information. Example:
+                            <pre>{"name" : "updated name"}</pre>
+                        </td>
+                        <td>If the user exist, then their name will be updated. If the user does not exist, then a 404 error message is shown. Example:
+                            <pre>{message : user's updated name}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Read list of all movies</td>
+                        <td>/movies</td>
+                        <td>GET</td>
+                        <td>none</td>
+                        <td>JSON object of all movies. Example:
+                            <pre>{"movie" : "Transformers", "genre" : "Action"}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Read list of a specific movie</td>
+                        <td>/movies/:title</td>
+                        <td>GET</td>
+                        <td>none</td>
+                        <td>Returns a JSON object with information about a specific movie. Example:
+                            <pre>{"title" : "Godzilla", "genre" : "action", "director" : "Gareth Edwards"}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Read the genre of a movie</td>
+                        <td>/movies/genre/:genreName</td>
+                        <td>GET</td>
+                        <td>none</td>
+                        <td>Returns a JSON object with the description of the genre. Example:
+                            <pre>{"name": "drama", "description": "a form of performance that involves conflicts, emotions, and the portrayal of human experiences through dialogue and action."}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Read a directors bio</td>
+                        <td>/movies/director/:name</td>
+                        <td>GET</td>
+                        <td>none</td>
+                        <td>Returns a JSON object with a director's information. Example:
+                            <pre>{"name": "Bill Condon", "bio": "Bill Condon was born on 22 October 1955 in New York City, New York, USA. He is a director and writer, known for Dreamgirls (2006).", "birth_year": "1955", "death_year": "Still Active"}</pre>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </section>
     </body>
