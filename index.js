@@ -38,7 +38,7 @@ let movies =[
             birth_year: 1965,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BZjM3ZDA2YmItMzhiMi00ZGI3LTg3ZGQtOTk3Nzk0MDY0ZDZhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'
     },
     {title: 'Cars',
         genre: {
@@ -52,7 +52,7 @@ let movies =[
             birth_year: 1957,
             death_year: 'Still Active'
         },
-        image:''
+        image:'https://m.media-amazon.com/images/M/MV5BMzY1MjI1NjkwMl5BMl5BanBnXkFtZTcwMzQ0MTQyMw@@._V1_.jpg'
     },
     {title: 'Green Book',
         genre: {
@@ -66,7 +66,7 @@ let movies =[
             birth_year: 1956,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BNDU5YTNmMmItN2QxNy00OGQ0LTg5MTctNzFmYjEzZjcwN2UwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'
     },
     {title: 'Alien: Romulus',
         genre: {
@@ -80,7 +80,7 @@ let movies =[
             birth_year: 1978,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BMDU0NjcwOGQtNjNjOS00NzQ3LWIwM2YtYWVmODZjMzQzN2ExXkEyXkFqcGc@._V1_QL75_UX190_CR0,0,190,281_.jpg'
     },
     {title: 'Straight Outta Compton',
         genre: {
@@ -94,7 +94,7 @@ let movies =[
             birth_year: 1969,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BMTA5MzkyMzIxNjJeQTJeQWpwZ15BbWU4MDU0MDk0OTUx._V1_.jpg'
     },
     {title: 'Ready Player One',
         genre: {
@@ -108,7 +108,7 @@ let movies =[
             birth_year: 1946,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BNzVkMTgzODQtMWIwZC00NzE4LTgzZjYtMzAwM2I5OGZhNjE4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'
     },
     {title: 'Dreamgirls',
         genre: {
@@ -122,7 +122,7 @@ let movies =[
             birth_year: 1955,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BMTY1MzIwNDQyNl5BMl5BanBnXkFtZTcwNDEwNzYyMw@@._V1_FMjpg_UX1000_.jpg'
     },
     {title: 'Godzilla',
         genre: {
@@ -136,7 +136,7 @@ let movies =[
             birth_year: 1975,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BODE2NTdmMmYtY2U1OS00MjExLWIwNjQtYjQ5NTA0ZDZmZjZiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'
     },
     {title: 'The Greatest Showman',
         genre: {
@@ -150,7 +150,7 @@ let movies =[
             birth_year: 1968,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BMjI1NDYzNzY2Ml5BMl5BanBnXkFtZTgwODQwODczNTM@._V1_FMjpg_UX1000_.jpg'
     },
     {title: 'Dune',
         genre: {
@@ -164,7 +164,7 @@ let movies =[
             birth_year: 1967,
             death_year: 'Still Active'
         },
-        image: ''
+        image: 'https://m.media-amazon.com/images/M/MV5BNWIyNmU5MGYtZDZmNi00ZjAwLWJlYjgtZTc0ZGIxMDE4ZGYwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg'
     }
 ];
 
