@@ -408,20 +408,28 @@ app.get('/movies/genre/:genreName', async (req, res) => {
 });
 
 //Read a directors bio
-app.get('/movies/director/:name', (req, res) => {
-    const dirName = req.params.name;
-    const dirBio = movies.find(movie => movie.director.name === dirName).director;
+//app.get('/movies/director/:name', (req, res) => {
+//    const dirName = req.params.name;
+//    const dirBio = movies.find(movie => movie.director.name === dirName).director;
 
-    if(dirBio){
-        res.status(200).json(dirBio);
-    } else {
-        res.status(404).send('This director is not in our database.')
-    }
+//    if(dirBio){
+//        res.status(200).json(dirBio);
+//    } else {
+//        res.status(404).send('This director is not in our database.')
+//    }
+//});
+
+app.get('/movies/:movie/director/:name', async (req, res) => {
+    await Movies.findOne({Title: req.params.movie})
+    .then((movie) => {
+        if(!movie) {
+            res.status(400).send(req.params.movie + ' is not in our database')
+        } else {
+            const dirName = req.params.name;
+            res.status(200).json(dirName.bio)
+        }
+    })
 });
-
-app.get('/movies/director/:name', async (req, res) => {
-    await Movies.findOne({})
-})
 
 //Read list of all users
 app.get('/users', async (req, res) => {
