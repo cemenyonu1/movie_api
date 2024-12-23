@@ -212,9 +212,9 @@ app.post('/users', async (req, res) => {
             })
         }
     })
-    .catch((error) => {
-        console.log(error);
-        res.status(500).send('Error: ' + error)
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err)
     });
 });
 
@@ -263,9 +263,18 @@ app.delete('/users/:email', async (req, res) => {
 //Add a new movie to their favorite movies
 
 app.post('/users/:id/:movie', async (req, res) => {
-    await Users.findOne({id: req.params.id})
+    const movie = req.params.movie
+    await Users.findOneAndUpdate(
+        {id: req.params.id},
+        {$push: {favoriteMovies: movie}},
+        {new: true}
+    )
     .then((user) => {
-        {$push : {FavoriteMovies: req.params.movie}}
+        if(!user) {
+            res.status(400).send(req.params.id + ' is not in the database');
+        } else {
+            res.status(200).json(user);
+        }
     })
     .catch((err) => {
         console.error('Error: ' + err)
@@ -290,7 +299,7 @@ app.delete('users/:id/:movie', async (req, res) => {
     await Users.findOne({id : req.params.id})
     .then((user) => {
         if(user) {
-            user.findOneAndDelete({favoriteMovies : req.params.movie});
+            user.findOneAndRemove({favoriteMovies : req.params.movie});
             res.status(201).send(`${req.params.movie} + has been removed from ${req.params.id}'s list.`)
         } else {
             res.status(400).send('The user is not in our database')
@@ -348,30 +357,54 @@ app.get('/movies', async (req, res) => {
     .catch((err) => {
         console.error('Error : ' + err);
     })
-})
+});
 
 //Read list of a specific movie
-app.get('/movies/:title', (req, res) =>{
-    const title = req.params.title;
-    const movie = movies.find(movie => movie.title === title);
+//app.get('/movies/:title', (req, res) =>{
+//    const title = req.params.title;
+//    const movie = movies.find(movie => movie.title === title);
 
-    if(movie) {
-        res.status(200).json(movie);
-    } else {
-        res.status(404).send('This movie is not in our database.');
-    }
+//    if(movie) {
+//        res.status(200).json(movie);
+//    } else {
+//        res.status(404).send('This movie is not in our database.');
+//   }
+//});
+
+app.get('/movies/:title', async (req, res) => {
+    await Movies.findOne({title : req.params.title})
+    .then((movie) => {
+        if (movie) {
+            res.status(200).json(movie)
+        }else{
+            res.status(400).send('This movie is not in our database')
+        }
+    })
+    .catch((err) => {
+        console.error('Error : ' + err)
+    });
 });
 
 //Read the genre of a movie
-app.get('/movies/genre/:genreName', (req, res) =>{
-    const genreNew = req.params.genreName;
-    const genreName = movies.find(movie => movie.genre.name === genreNew).genre;
+//app.get('/movies/genre/:genreName', (req, res) =>{
+//    const genreNew = req.params.genreName;
+//    const genreName = movies.find(movie => movie.genre.name === genreNew).genre;
 
-    if(genreName){
-        res.status(200).json(genreName);
-    } else {
-        res.status(404).send('This genre is not in our database.');
-    }
+//    if(genreName){
+//        res.status(200).json(genreName);
+//    } else {
+//        res.status(404).send('This genre is not in our database.');
+//    }
+//});
+
+app.get('/movies/genre/:genreName', async (req, res) => {
+    await Movies.findOne({genre : req.params.genreName})
+    .then((genre) => {
+        res.status(200).json(genre);
+    })
+    .catch((err) => {
+        console.error('Error : ' + err)
+    })
 });
 
 //Read a directors bio
@@ -385,6 +418,10 @@ app.get('/movies/director/:name', (req, res) => {
         res.status(404).send('This director is not in our database.')
     }
 });
+
+app.get('/movies/director/:name', async (req, res) => {
+    await Movies.findOne({})
+})
 
 //Read list of all users
 app.get('/users', async (req, res) => {
