@@ -10,7 +10,7 @@ Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/movie_api', {useNewUrlParser: true, useUnifideTopology: true});
+mongoose.connect('mongodb://localhost:27017/movie_api', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'});
 
@@ -279,7 +279,7 @@ app.post('/users/:id/:movie', async (req, res) => {
     .catch((err) => {
         console.error('Error: ' + err)
     })
-})
+});
 
 //Remove a movie from their favorite movies
 //app.delete('/users/:id/:movie', (req, res) =>{
@@ -398,7 +398,8 @@ app.get('/movies/:title', async (req, res) => {
 //});
 
 app.get('/movies/genre/:genreName', async (req, res) => {
-    await Movies.findOne({genre : req.params.genreName})
+    const input = req.params.genreName.trim().toLowerCase();
+    await Movies.findOne({'genre.name' : input})
     .then((genre) => {
         res.status(200).json(genre);
     })
@@ -419,16 +420,20 @@ app.get('/movies/genre/:genreName', async (req, res) => {
 //    }
 //});
 
-app.get('/movies/:movie/director/:name', async (req, res) => {
-    await Movies.findOne({Title: req.params.movie})
-    .then((movie) => {
-        if(!movie) {
-            res.status(400).send(req.params.movie + ' is not in our database')
+app.get('/movies/director/:name', async (req, res) => {
+    try {
+        const movie = await Movies.findOne({"director.name" : req.params.name}).select('director.name director.bio');
+    
+        if(movie.length === 0) {
+            res.status(404).send(req.params.name + ' is not in our database');
         } else {
-            const dirName = req.params.name;
-            res.status(200).json(dirName.bio)
+            res.status(200).json(movie);
         }
-    })
+    }
+    catch(err) {
+        console.error('Error: ' + err);
+        res.send('We ran into an error while fetching data!')
+    }
 });
 
 //Read list of all users
