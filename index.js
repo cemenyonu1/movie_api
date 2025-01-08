@@ -7,6 +7,8 @@ uuid = require('uuid'),
 mongoose = require('mongoose'),
 Models = require('./models.js');
 
+//let auth = require('./auth') (app);
+
 const Movies = Models.Movie;
 const Users = Models.User;
 
@@ -192,30 +194,30 @@ app.use(express.static('public'));
 //});
 
 app.post('/users', async (req, res) => {
-    await Users.findOne({Username : req.body.Username})
-    .then((user) => {
-        if(user) {
-            return res.status(200).send(req.body.Username + ' already exists')
-        } else {
-            Users.create({
-                Username: req.body.Username,
-                Password: req.body.Password,
-                Email: req.body.Email,
-                Birthday: req.body.Birthday
-            })
-            .then((user) => {
-                res.status(201).json(user)
-            })
-            .catch((error) => {
-                console.log(error);
-                res.status(500).send('Error: ' + error)
-            })
+    try { 
+        const establishedUser = await Users.findOne({username : req.body.username});
+
+// If user already exists, send a response back        
+        if(establishedUser) {
+            return res.status(200).send(req.body.username + ' already exists')
         }
-    })
-    .catch((err) => {
+
+// Create a new user if one does not exist        
+        const newUser = await Users.create({
+            username: req.body.username,
+            password: req.body.password,
+            email: req.body.email,
+            birthday: req.body.birthday
+        })
+        
+// Send back the new user information        
+        res.status(201).json(newUser)
+        
+    }
+    catch(err) {
         console.error(err);
-        res.status(500).send('Error: ' + err)
-    });
+        res.status(500).send('Error: ' + err);
+    };
 });
 
 //Delete a user from the database
@@ -232,18 +234,27 @@ app.post('/users', async (req, res) => {
 //});
 
 //Delete a user from the database
-app.delete('/users/:email', async (req, res) => {
-    await Users.findOneAndRemove({Email: req.params.email})
-    .then((user) => {
-        if(!user) {
-            res.status(500).send(req.params.email + ' is not in the database')
+app.delete('/users/:username', async (req, res) => {
+    const user = req.params.username;
+
+    if(!user) {
+        return res.status(400).send('Username is missing. Please include a username.')
+    }
+    
+    try {
+        const userFirst = await Users.findOne({username: user});
+
+        if(!userFirst) {
+            return res.status(400).send(`${user} is not in our database.`);
         } else {
-            res.status(200).send(req.params.email + ' has been successfully removed.')
-        }
-    })
-    .catch((err) => {
-        console.error('Error: ' + err)
-    })
+            await Users.findOneAndDelete({username: user});
+            return res.status(200).send(`${user} has been successfully removed.`);
+        };
+    }
+    catch(err)  {
+        console.error('Error: ' + err);
+        res.status(400).send(`Error: ${err}`)
+    }
 });
 
 //Add a new movie to their favorite movies
@@ -262,23 +273,49 @@ app.delete('/users/:email', async (req, res) => {
 
 //Add a new movie to their favorite movies
 
-app.post('/users/:id/:movie', async (req, res) => {
-    const movie = req.params.movie
-    await Users.findOneAndUpdate(
-        {id: req.params.id},
-        {$push: {favoriteMovies: movie}},
-        {new: true}
-    )
-    .then((user) => {
-        if(!user) {
-            res.status(400).send(req.params.id + ' is not in the database');
+app.post('/users/:username/:movie', async (req, res) => {
+    const movie = req.params.movie;
+    const user = req.params.username;
+
+    if(!movie || !user) {
+        return res.status(400).send("Movie or username is missing. Please include both.")
+    }
+
+    try {
+        const movieFirst = await Movies.findOne({title: movie});
+
+        if(!movieFirst) {
+            res.status(400).send(`${movie} is not in our database`)
+        };
+
+        const movieId = movieFirst._id;
+
+        const userFirst = await Users.findOne({username: user});
+
+        if(!userFirst) {
+            return res.status(400).send(`${user} is not in our database.`)
+        };
+
+        if(userFirst && userFirst.favoriteMovies.includes(movieId)) {
+            return res.status(400).send(`${movie} is already in ${user}'s Favorite Movies list.`)
+        };
+
+        const updatedUser = await Users.findOneAndUpdate(
+            {username: req.params.username},
+            {$push: {favoriteMovies: movieId}},
+            {new: true}
+        );
+        
+        if (!updatedUser) {
+            res.status(400).send(req.params.username + ' is not in the database');
         } else {
-            res.status(200).json(user);
+            res.status(200).json(updatedUser.favoriteMovies);
         }
-    })
-    .catch((err) => {
-        console.error('Error: ' + err)
-    })
+    }
+    catch(err) {
+        console.error('Error: ' + err);
+        res.status(400).send(`Error: ${err}`)
+    }
 });
 
 //Remove a movie from their favorite movies
@@ -295,19 +332,39 @@ app.post('/users/:id/:movie', async (req, res) => {
     //}
 //});
 
-app.delete('users/:id/:movie', async (req, res) => {
-    await Users.findOne({id : req.params.id})
-    .then((user) => {
-        if(user) {
-            user.findOneAndRemove({favoriteMovies : req.params.movie});
-            res.status(201).send(`${req.params.movie} + has been removed from ${req.params.id}'s list.`)
-        } else {
-            res.status(400).send('The user is not in our database')
+app.delete('/users/:username/:movie', async (req, res) => {
+    const user = req.params.username;
+    const movie = req.params.movie;
+
+    if(!user || !movie) {
+        return res.status(400).send('Username or Movie is missing. Please include')
+    }
+    
+    try {
+        const userFirst = await Users.findOne({username : user});
+        const movieFirst = await Movies.findOne({title: movie});
+
+        if(!movieFirst) {
+            return res.status(400).send(`${movie} is not in our database.`)
         }
-    })
-    .catch((err) => {
-        console.error('Error: ' + err)
-    })
+
+        const movieId = movieFirst._id;
+
+        if(!userFirst) {
+            return res.status(400).send(`${user} is not in our database`)
+        }
+
+        if(userFirst && userFirst.favoriteMovies.includes(movieId)) {
+            await userFirst.updateOne({$pull: {favoriteMovies : movieId}});
+            res.status(201).send(`${movie} has been removed from ${user}'s list.`)
+        } else {
+            res.status(400).send(`${movie} is not in ${user}'s Favorite Movie List.`)
+        }
+    }
+    catch(err) {
+        console.error('Error: ' + err);
+        res.status(400).send(`Error: ${err}`)
+    }
 });
 
 //Update users usernames
@@ -325,23 +382,31 @@ app.delete('users/:id/:movie', async (req, res) => {
 //    }
 //});
 
-app.put('/users/:id/:username', async (req, res) => {
-    await Users.findOneAndUpadte({id: req.params.id}),
-    {$set: {
-        Name : req.params.name,
-        Username : req.params.username,
-        Password : req.params.password,
-        Email : req.params.email,
-        Birthday : req.params.birthday
-    }}
-    .then((user) => {
-        if(user) {
-            res.json(user);
+app.put('/users/:username', async (req, res) => {
+    try {
+        const updatedUser = await Users.findOneAndUpdate({username: req.params.username},
+        
+            {
+                $set: {
+                    name : req.body.name,
+                    username : req.body.username,
+                    password : req.body.password,
+                    email : req.body.email,
+                    birthday : req.body.birthday
+                }
+            },
+            {new : true}
+        )
+    
+        if(updatedUser) {
+            res.status(200).json(updatedUser);
+        } else {
+            res.status(400).send(`${req.params.username} is not in our database`)
         }
-    })
-    .catch((err) => {
+    }
+    catch(err)  {
         console.error('Error : ' + err);
-    })
+    }
 });
 
 //Read list of all movies
@@ -399,7 +464,7 @@ app.get('/movies/:title', async (req, res) => {
 
 app.get('/movies/genre/:genreName', async (req, res) => {
     const input = req.params.genreName.trim().toLowerCase();
-    await Movies.findOne({'genre.name' : input})
+    await Movies.findOne({'genre.name' : input}).select('genre.name genre.description')
     .then((genre) => {
         res.status(200).json(genre);
     })
@@ -422,7 +487,7 @@ app.get('/movies/genre/:genreName', async (req, res) => {
 
 app.get('/movies/director/:name', async (req, res) => {
     try {
-        const movie = await Movies.findOne({"director.name" : req.params.name}).select('director.name director.bio');
+        const movie = await Movies.findOne({"director.name" : req.params.name}).select('director.name director.bio director.birth_year director.death_year');
     
         if(movie.length === 0) {
             res.status(404).send(req.params.name + ' is not in our database');

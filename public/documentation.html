@@ -35,7 +35,7 @@
                     </tr>
                     <tr>
                         <td>Delete a user from the database</td>
-                        <td>/users/:email</td>
+                        <td>/users/:username</td>
                         <td>DELETE</td>
                         <td>none</td>
                         <td>If the user exist, then their account will be deleted. If the user does not exist, then a 404 error message is shown. Example:
@@ -44,7 +44,7 @@
                     </tr>
                     <tr>
                         <td>Add a new movie to their favorite movies</td>
-                        <td>/users/:id/:movie</td>
+                        <td>/users/:username/:movie</td>
                         <td>POST</td>
                         <td>JSON object with updated movie data. Example:
                             <pre>{"favoriteMovies" : "A Movie"}</pre>
@@ -64,7 +64,7 @@
                     </tr>
                     <tr>
                         <td>Update users usernames</td>
-                        <td>/users/:update</td>
+                        <td>/users/:username</td>
                         <td>PUT</td>
                         <td>JSON object with updated user information. Example:
                             <pre>{"name" : "updated name"}</pre>
