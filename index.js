@@ -553,7 +553,7 @@ app.get('/users',passport.authenticate('jwt', {session : false}), async (req, re
 });
 
 app.get('/', (req, res) => {
-    res.send('Thank You For Visiting My Movie App');
+    res.status(200).send('Thank You For Visiting My Movie App');
 });
 
 app.use((err, req, res, next) => {
@@ -561,7 +561,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something is not working!');
 });
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8080;
 
 app.listen(port, '0.0.0.0', () => {
     console.log('Listening on port ' + port)

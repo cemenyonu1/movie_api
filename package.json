@@ -1,14 +1,14 @@
 {
   "name": "movie_api",
   "version": "1.0.0",
+  "description": "Welcome to the world of movies! This movie app allows you to browse different films and their contents and also create and edit your own profile.",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
