@@ -13,7 +13,9 @@ require('./passport');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/movie_api', {useNewUrlParser: true, useUnifiedTopology: true});
+//mongoose.connect('mongodb://localhost:27017/movie_api', {useNewUrlParser: true, useUnifiedTopology: true});
+
+mongoose.connect('process.env.CONNECTION_URI', {useNewUrlParser: true, useUnifiedTopology: true});
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'});
 const {check, validationResult} = require('express-validator');
@@ -212,10 +214,10 @@ app.use(express.static('public'));
    // }
 //});
 app.post('/users', [
-    check('Username', 'Username is too short.').isLength({min: 5}),
-    check('Username', 'Username is not alphanumeric').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email is not valid').isEmail()
+    check('username', 'Username is too short.').isLength({min: 5}),
+    check('username', 'Username is not alphanumeric').isAlphanumeric(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('email', 'Email is not valid').isEmail()
 ], async (req, res) => {
     let errors = validationResult(req);
 
@@ -223,7 +225,7 @@ app.post('/users', [
         return res.status(422).json({errors : errors.array()});
     }
 
-    let hashedPasswored = Users.hashPassword(req.body.password);
+    let hashedPassword = Users.hashPassword(req.body.password);
     try { 
         const establishedUser = await Users.findOne({username : req.body.username});
 
@@ -412,12 +414,12 @@ app.delete('/users/:username/:movie',passport.authenticate('jwt', {session : fal
 //    }
 //});
 
-app.put('/users/:username',[
+app.put('/users/:username',passport.authenticate('jwt', {session : false}), [
     check('Username', 'Username is too short').isLength({min: 5}),
     check('Username', 'Username is not alphanumeric').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email is not valid').isEmail()
-] ,passport.authenticate('jwt', {session : false}), async (req, res) => {
+    check('Password', 'Password is required').not().isEmpty().optional(),
+    check('Email', 'Email is not valid').isEmail().optional()
+], async (req, res) => {
     try {
         const updatedUser = await Users.findOneAndUpdate({username: req.params.username},
         
