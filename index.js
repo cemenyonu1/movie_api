@@ -420,26 +420,82 @@ app.put('/users/:username',passport.authenticate('jwt', {session : false}), [
     check('Password', 'Password is required').not().isEmpty().optional(),
     check('Email', 'Email is not valid').isEmail().optional()
 ], async (req, res) => {
+    //Verifies that the authenticated user matches the user in the URL.
+    if(req.user.username !== req.params.username) {
+        return res.status(400).send('Access Denied')
+    };
+
+    // Gets the username from the URL
+    const {username} = req.params;
+
+    //Creates a body for the updated information
+    const {
+        newUsername,
+        newPassword,
+        newEmail,
+        newBirthday
+    } = req.body;
+
+    //Locate the user by their username
     try {
-        const updatedUser = await Users.findOneAndUpdate({username: req.params.username},
-        
-            {
-                $set: {
-                    name : req.body.name,
-                    username : req.body.username,
-                    password : req.body.password,
-                    email : req.body.email,
-                    birthday : req.body.birthday
-                }
-            },
-            {new : true}
-        )
-    
-        if(updatedUser) {
-            res.status(200).json(updatedUser);
+        const existingUser = await Users.findOne({username});
+
+        if(!existingUser) {
+            return res.status(400).send('This user is not registered.')
+        };
+
+        //Creates and object to hold the new information
+        const updates = {};
+
+        //Creates an array to verify if new information was added
+        const updatedStuff = [];
+
+        //Updates the username
+        if(newUsername && newUsername !== existingUser.username) {
+            updates.username = newUsername;
+            updatedStuff.push('Username updated')
         } else {
-            res.status(400).send(`${req.params.username} is not in our database`)
+            res.status(400).send('New username is invalid.')
+        };
+
+        //Updates the password
+        if(newPassword && newPassword !== existingUser.password) {
+            updates.password = await Users.hashPassword(newPassword); //Hash password
+            updatedStuff.push('Password updated')
+        } else {
+            res.status(400).send('New password is invalid.')
+        };
+
+        //Updates Email
+        if(newEmail && newEmail !== existingUser.email) {
+            updates.email = newEmail;
+            updatedStuff.push('Email updated')
+        } else {
+            res.status(400).send('New email is invalid')
+        };
+
+        //Updates Birthday
+        if(newBirthday && newBirthday !== existingUser.birthday) {
+            updates.birthday = newBirthday;
+            updatedStuff.push('Birthday updated')
+        };
+
+        //If nothing was updated, return an error
+        if(Object.keys(updatedStuff).length === 0) {
+            res.status(400).send('Nothing was updated')
         }
+
+        //Adds updates to database
+        const updatedUser = await Users.findOneAndUpdate({username}, {$set: updates}, {new : true});
+    
+        res.status(200).json({
+            user : {
+                username : updatedUser.username,
+                password : updatedUser.password,
+                email : updatedUser.email,
+                birthday : updatedUser.birthday
+            }
+        })
     }
     catch(err)  {
         console.error('Error : ' + err);
