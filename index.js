@@ -15,7 +15,7 @@ const Users = Models.User;
 
 //mongoose.connect('mongodb://localhost:27017/movie_api', {useNewUrlParser: true, useUnifiedTopology: true});
 
-mongoose.connect('process.env.CONNECTION_URI', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.CONNECTION_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'});
 const {check, validationResult} = require('express-validator');
