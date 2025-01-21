@@ -4,15 +4,47 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Movie API Documentation</title>
+        <style>
+            .main-table {
+                width: 100%;
+                margin: auto;
+            }
+            thead {
+                background-color: grey;
+            }
+            td,
+            th {
+                border: 1px solid black;
+                padding: 10px;
+                vertical-align: top;
+                white-space: normal;
+            }
+            pre,
+            td,
+            th {
+                word-wrap: break-word;
+            }
+           pre {
+            word-wrap: break-word;
+            white-space: pre-wrap;
+    
+           }
+            table {
+                table-layout: fixed;
+            }
+            td {
+                overflow:auto
+            }
+        </style>
     </head>
     <body>
         <section class ="page-title">
             <h1>Movie API Documentation</h1>
-            <p>This applications allows users to browse movie titles and retreive information about each film. Users are also able to create an account and update their details of that account.</p>
+            <p>This application allows users to browse movie titles and retreive information about each film. Users are also able to create an account and update their details of that account.</p>
         </section>
-        <section class="table">
-            <table>
-                <thead>
+        <section>
+            <table class="main-table">
+                <thead class="head-class">
                     <tr>
                         <th>Request</th>
                         <th>URL</th>
@@ -30,36 +62,51 @@
                             <pre>{"name" : "John Doe", "email" : "Johndoe@none.com"}</pre>
                         </td>
                         <td>If the name and email fields are present, then a new user will be created and given two new fields. One is Id and the other is favoriteMovies. Example:
-                            <pre>{"name" : "John Doe", "email" : "Johndoe@none.com", "id" : "1234", "favoriteMovies" : "[]"}</pre>
+                            <pre>
+                                {
+                                "name" : "John Doe", 
+                                "email" : "Johndoe@none.com", 
+                                "id" : "1234", 
+                                "favoriteMovies" : "[]"
+                                }</pre>
                         </td>
                     </tr>
                     <tr>
                         <td>Delete a user from the database</td>
                         <td>/users/:username</td>
                         <td>DELETE</td>
-                        <td>none</td>
-                        <td>If the user exist, then their account will be deleted. If the user does not exist, then a 404 error message is shown. Example:
-                            <pre>{message : User has been removed from our database!}</pre>
+                        <td>None</td>
+                        <td>If the user exist, then their account will be deleted. If the user does not exist, then a 404 error message is shown. Example: 
+                            <pre>
+                                {
+                                message : User has been removed from our database!
+                            }</pre>
                         </td>
                     </tr>
                     <tr>
                         <td>Add a new movie to their favorite movies</td>
                         <td>/users/:username/:movie</td>
                         <td>POST</td>
-                        <td>JSON object with updated movie data. Example:
+                        <td>JSON object with updated movie data. Example: <br>
                             <pre>{"favoriteMovies" : "A Movie"}</pre>
                         </td>
                         <td>If the user exists, then the movie will be added to their Favorite Movies list. If the user does not exist, then a 404 error message is shown. Example:
-                            <pre>{message : Movie has been added to User's favorite movie list!}</pre>
+                            <pre>
+                                {
+                                message : Movie has been added to User's favorite movie list!
+                            }</pre>
                         </td>
                     </tr>
                     <tr>
                         <td>Remove a movie from their favorite movies</td>
-                        <td>/users/:id/:movie</td>
+                        <td>/users/:username/:movie</td>
                         <td>DELETE</td>
-                        <td>none</td>
+                        <td>None</td>
                         <td>If the user exist, then the movie will be removed from their Favorite Movies list. If the user does not exist, then a 404 error message is shown. Example:
-                            <pre>{message : movie has been removed from user's favorite movie list!}</pre>
+                            <pre>
+                                {
+                                message : movie has been removed from user's favorite movie list!
+                            }</pre>
                         </td>
                     </tr>
                     <tr>
@@ -70,43 +117,121 @@
                             <pre>{"name" : "updated name"}</pre>
                         </td>
                         <td>If the user exist, then their name will be updated. If the user does not exist, then a 404 error message is shown. Example:
-                            <pre>{message : user's updated name}</pre>
+                            <pre>
+                                {
+                                    message : user's updated name
+                                }</pre>
                         </td>
                     </tr>
                     <tr>
                         <td>Read list of all movies</td>
                         <td>/movies</td>
                         <td>GET</td>
-                        <td>none</td>
+                        <td>None</td>
                         <td>JSON object of all movies. Example:
-                            <pre>{"movie" : "Transformers", "genre" : "Action"}</pre>
+                            <pre>
+                                {
+                                "movie" : "Transformers", 
+                                "genre" : "Action"
+                            }</pre>
                         </td>
                     </tr>
                     <tr>
-                        <td>Read list of a specific movie</td>
+                        <td>Read information of a specific movie</td>
                         <td>/movies/:title</td>
                         <td>GET</td>
-                        <td>none</td>
+                        <td>None</td>
                         <td>Returns a JSON object with information about a specific movie. Example:
-                            <pre>{"title" : "Godzilla", "genre" : "action", "director" : "Gareth Edwards"}</pre>
+                            <pre>
+                                {
+                                "title" : "Godzilla", 
+                                "genre" : "action", 
+                                "director" : "Gareth Edwards"
+                            }</pre>
                         </td>
                     </tr>
                     <tr>
                         <td>Read the genre of a movie</td>
                         <td>/movies/genre/:genreName</td>
                         <td>GET</td>
-                        <td>none</td>
+                        <td>None</td>
                         <td>Returns a JSON object with the description of the genre. Example:
-                            <pre>{"name": "drama", "description": "a form of performance that involves conflicts, emotions, and the portrayal of human experiences through dialogue and action."}</pre>
+                            <pre>
+                                {
+                                "name": "drama", 
+                                "description": "a form of performance that involves conflicts, emotions, and the portrayal of human experiences through dialogue and action."
+                            }</pre>
                         </td>
                     </tr>
                     <tr>
                         <td>Read a directors bio</td>
                         <td>/movies/director/:name</td>
                         <td>GET</td>
-                        <td>none</td>
+                        <td>None</td>
                         <td>Returns a JSON object with a director's information. Example:
-                            <pre>{"name": "Bill Condon", "bio": "Bill Condon was born on 22 October 1955 in New York City, New York, USA. He is a director and writer, known for Dreamgirls (2006).", "birth_year": "1955", "death_year": "Still Active"}</pre>
+                            <pre>
+                                {
+                                "name": "Bill Condon", 
+                                "bio": "Bill Condon was born on 22 October 1955 in New York City, New York, USA. He is a director and writer, known for Dreamgirls (2006).", 
+                                "birth_year": "1955", 
+                                "death_year": "Still Active"
+                            }</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Read list of all users in the database</td>
+                        <td>/users</td>
+                        <td>GET</td>
+                        <td>None</td>
+                        <td>Returns a JSON odject that lists all of the users in the database. Example: 
+                            <pre>
+                                {
+                                "_id": "677f51ba91278105ec485588",
+                                "username": "chris124",
+                                "password": "doej321",
+                                "email": "jdoe@none.com",
+                                "favoriteMovies": [],
+                                "__v": 0
+                            },
+                            {
+                                "_id": "675a1d8715e2c0d0db318a22",
+                                "name": "Austin Rome",
+                                "username": "arome123",
+                                "password": "romea321",
+                                "birthday": "1993-03-14T00:00:00.000Z",
+                                "email": "arome@none.com",
+                                "favoriteMovies": [
+                                    "675a1a5115e2c0d0db318a18",
+                                    "675a1a8815e2c0d0db318a19"
+                                ]
+                            },
+                            {
+                                "_id": "678dbdd0b4877ff5cd1e4558",
+                                "username": "howhow123",
+                                "password": "$2b$10$8kMToHFppxt7ZJoW5TzjDeeCO3eKpZr90RU5o41rJBcKGGKylbYTe",
+                                "email": "idk@none.com",
+                                "favoriteMovies": [],
+                                "__v": 0
+                            }</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Allow registered users to login</td>
+                        <td>/login</td>
+                        <td>POST</td>
+                        <td>Insert Username and Password as keys and insert the username and password of the registered user respectively. Copy the created token and add it to the Bearer Authorization</td>
+                        <td>Returns a JSON object of the registered user which includes all of the users information and a token. Example: 
+                            <pre>
+                                "user": {
+                                "_id": "678fcb23d64aac3671582ccf",
+                                "username": "charles565",
+                                "password": "$2b$10$8xFLQ9ezXodv9hfPFUNhCOSB4OBFwlTuKkbzV5H0GZ/jafwT3MpxK",
+                                "email": "idk@none.com",
+                                "favoriteMovies": [],
+                                "__v": 0
+                            },
+                            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzhmY2IyM2Q2NGFhYzM2NzE1ODJjY2YiLCJ1c2VybmFtZSI6ImNoYXJsZXM1NjUiLCJwYXNzd29yZCI6IiQyYiQxMCQ4eEZMUTllelhvZHY5aGZQRlVOaENPU0I0T0JGd2xUdUtrYnpWNUgwR1ovamFmd1QzTXB4SyIsImVtYWlsIjoiaWRrQG5vbmUuY29tIiwiZmF2b3JpdGVNb3ZpZXMiOltdLCJfX3YiOjAsImlhdCI6MTczNzQ4MzAwNCwiZXhwIjoxNzM4MDg3ODA0LCJzdWIiOiJjaGFybGVzNTY1In0.EptIBspUrYgqhMzkVBo0APNW0i-ukyTordZThyLSmII"
+                           </pre>
                         </td>
                     </tr>
                 </tbody>

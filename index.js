@@ -201,18 +201,6 @@ let movies =[
 app.use(express.static('public'));
 
 //Create new users
-//app.post('/users', (req, res) => {
-  //  const newUser = req.body;
-
-    //if(newUser.name && newUser.email) {
-      //  newUser.id = uuid.v4();
-        //newUser.favoriteMovies = [];
-        //users.push(newUser);
-        //res.status(201).json(newUser);
-   // } else {
-     //   res.status(404).send('Name or email is missing from user. Please add a name or email.');
-   // }
-//});
 app.post('/users', [
     check('username', 'Username is too short.').isLength({min: 5}),
     check('username', 'Username is not alphanumeric').isAlphanumeric(),
@@ -253,19 +241,6 @@ app.post('/users', [
 });
 
 //Delete a user from the database
-//app.delete('/users/:email', (req, res) =>{
-//    const id = req.params.email;
-//    let user = users.find(user => user.email == id);
-
-//    if(user){
-//        users = users.filter(user => user.email != id);
-//        res.status(201).send(`${user.email} has been removed from our database!`);
-//    } else {
-//        res.status(400).send('The user is not in our database.');
-//    }
-//});
-
-//Delete a user from the database
 app.delete('/users/:username',passport.authenticate('jwt', {session : false}), async (req, res) => {
     const user = req.params.username;
 
@@ -290,21 +265,6 @@ app.delete('/users/:username',passport.authenticate('jwt', {session : false}), a
 });
 
 //Add a new movie to their favorite movies
-//app.post('/users/:id/:movie', (req, res) =>{
-//    const id = req.params.id;
-//    const movie = req.params.movie;
-//    let user = users.find(user => user.id == id);
-
-//    if(user){
-//        user.favoriteMovies.push(movie);
-//        res.status(201).send(`${movie} has been added to ${user.name}'s favorite movie list!`);
-//    } else {
-//        res.status(400).send('The user is not in our database.');
-//    }
-//});
-
-//Add a new movie to their favorite movies
-
 app.post('/users/:username/:movie',passport.authenticate('jwt', {session : false}), async (req, res) => {
     const movie = req.params.movie;
     const user = req.params.username;
@@ -351,19 +311,6 @@ app.post('/users/:username/:movie',passport.authenticate('jwt', {session : false
 });
 
 //Remove a movie from their favorite movies
-//app.delete('/users/:id/:movie', (req, res) =>{
-  //  const id = req.params.id;
-    //const movie = req.params.movie;
-    //let user = users.find(user => user.id == id);
-
-   // if(user){
-     //   user.favoriteMovies = user.favoriteMovies.filter(title => title !== movie);
-      //  res.status(201).send(`${movie} has been removed from ${user.name}'s favorite movie list!`);
-    //} else {
-      //  res.status(400).send('The user is not in our database.');
-    //}
-//});
-
 app.delete('/users/:username/:movie',passport.authenticate('jwt', {session : false}), async (req, res) => {
     const user = req.params.username;
     const movie = req.params.movie;
@@ -400,20 +347,6 @@ app.delete('/users/:username/:movie',passport.authenticate('jwt', {session : fal
 });
 
 //Update users usernames
-//app.put('/users/:id/:update', (req, res) => {
-//    let updatedUser = req.body;
-//    let id = req.params.id;
-//    let update = req.params.update;
-//    let user = users.find(user => user.id == id);
-
-//    if(user){
-//        user.name = update;
-//        res.status(201).json(user);
-//    } else {
-//        res.status(400).send('This user is not in our database');
-//    }
-//});
-
 app.put('/users/:username',passport.authenticate('jwt', {session : false}), [
     check('newUsername', 'Username is too short').isLength({min: 5}).optional(),
     check('newUsername', 'Username is not alphanumeric').isAlphanumeric().optional(),
@@ -497,10 +430,6 @@ app.put('/users/:username',passport.authenticate('jwt', {session : false}), [
 });
 
 //Read list of all movies
-// app.get('/movies', (req, res) => {
-//    res.status(200).json(movies);
-// });
-
 app.get('/movies',passport.authenticate('jwt', {session : false}), async (req, res) => {
     await Movies.find()
     .then((movies) => {
@@ -511,18 +440,7 @@ app.get('/movies',passport.authenticate('jwt', {session : false}), async (req, r
     })
 });
 
-//Read list of a specific movie
-//app.get('/movies/:title', (req, res) =>{
-//    const title = req.params.title;
-//    const movie = movies.find(movie => movie.title === title);
-
-//    if(movie) {
-//        res.status(200).json(movie);
-//    } else {
-//        res.status(404).send('This movie is not in our database.');
-//   }
-//});
-
+//Read information of a specific movie
 app.get('/movies/:title',passport.authenticate('jwt', {session : false}), async (req, res) => {
     await Movies.findOne({title : req.params.title})
     .then((movie) => {
@@ -538,17 +456,6 @@ app.get('/movies/:title',passport.authenticate('jwt', {session : false}), async 
 });
 
 //Read the genre of a movie
-//app.get('/movies/genre/:genreName', (req, res) =>{
-//    const genreNew = req.params.genreName;
-//    const genreName = movies.find(movie => movie.genre.name === genreNew).genre;
-
-//    if(genreName){
-//        res.status(200).json(genreName);
-//    } else {
-//        res.status(404).send('This genre is not in our database.');
-//    }
-//});
-
 app.get('/movies/genre/:genreName',passport.authenticate('jwt', {session : false}), async (req, res) => {
     const input = req.params.genreName.trim().toLowerCase();
     await Movies.findOne({'genre.name' : input}).select('genre.name genre.description')
@@ -561,17 +468,6 @@ app.get('/movies/genre/:genreName',passport.authenticate('jwt', {session : false
 });
 
 //Read a directors bio
-//app.get('/movies/director/:name', (req, res) => {
-//    const dirName = req.params.name;
-//    const dirBio = movies.find(movie => movie.director.name === dirName).director;
-
-//    if(dirBio){
-//        res.status(200).json(dirBio);
-//    } else {
-//        res.status(404).send('This director is not in our database.')
-//    }
-//});
-
 app.get('/movies/director/:name',passport.authenticate('jwt', {session : false}), async (req, res) => {
     try {
         const movie = await Movies.findOne({"director.name" : req.params.name}).select('director.name director.bio director.birth_year director.death_year');
