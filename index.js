@@ -454,24 +454,18 @@ app.put('/users/:username',passport.authenticate('jwt', {session : false}), [
         if(newUsername && newUsername !== existingUser.username) {
             updates.username = newUsername;
             updatedStuff.push('Username updated')
-        } else {
-            res.status(400).send('New username is invalid.')
         };
 
         //Updates the password
         if(newPassword && newPassword !== existingUser.password) {
             updates.password = await Users.hashPassword(newPassword); //Hash password
             updatedStuff.push('Password updated')
-        } else {
-            res.status(400).send('New password is invalid.')
         };
 
         //Updates Email
         if(newEmail && newEmail !== existingUser.email) {
             updates.email = newEmail;
             updatedStuff.push('Email updated')
-        } else {
-            res.status(400).send('New email is invalid')
         };
 
         //Updates Birthday
