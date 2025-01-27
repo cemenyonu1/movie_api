@@ -440,7 +440,7 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }), [
 });
 
 //Read list of all movies
-app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/movies', async (req, res) => {
     await Movies.find()
         .then((movies) => {
             res.status(200).json(movies);
@@ -522,3 +522,6 @@ const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
     console.log('Listening on port ' + port)
 });
+
+//This code was removed from the /movies endpoint
+//passport.authenticate('jwt', { session: false }), 
