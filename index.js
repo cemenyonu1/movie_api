@@ -358,10 +358,10 @@ app.delete('/users/:username/:movie', passport.authenticate('jwt', { session: fa
 
 //Update users usernames
 app.put('/users/:username', passport.authenticate('jwt', { session: false }), [
-    check('newUsername', 'Username is too short').isLength({ min: 5 }).optional(),
-    check('newUsername', 'Username is not alphanumeric').isAlphanumeric().optional(),
-    check('newPassword', 'Password is required').not().isEmpty().optional(),
-    check('newEmail', 'Email is not valid').isEmail().optional()
+    check('username', 'Username is too short').isLength({ min: 5 }).optional(),
+    check('username', 'Username is not alphanumeric').isAlphanumeric().optional(),
+    check('password', 'Password is required').not().isEmpty().optional(),
+    check('email', 'Email is not valid').isEmail().optional()
 ], async (req, res) => {
     //Verifies that the authenticated user matches the user in the URL.
     if (req.user.username !== req.params.username) {
